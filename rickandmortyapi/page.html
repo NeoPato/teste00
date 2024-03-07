@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick and Morty Characters</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            display:  flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2vw;
+            padding: 1rem;
+            width: 100vw;
+            height: auto;
+            overflow-wrap: hidden;
+            background-image: url("1335396.png");
+            background-attachment: fixed;
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: "Madimi One", sans-serif;
+        }
+        #container{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            height: auto;   
+            gap: 2vw;
+        } 
+        .image-style{
+            border-radius: 50%;
+            transition: all 200ms ease-out;
+        }
+        .image-hover{
+            border-radius: 100%;
+            transition:  all 200ms ease-in;
+            cursor: pointer;
+        }
+        .card{
+            padding: 4rem;
+            width: 200px;
+            height: auto;
+            border-radius: 5%;
+            flex-direction: column;
+            gap: 1vh;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid black;
+            background-color: whitesmoke;
+        }
+        input{
+            margin-bottom: 6vh;
+            padding: 5px;
+        }
+    </style>
+</haead>
+<bodyf>
+    <img src="../rickandmortyapi/Rick-and-Morty.png" alt="logo" width="500px" height="auto">
+    <div>
+        <label for="pageInput">Digite a página(1/42)</label>
+        <input type="text" id="pageInput">
+        <button onclick="fetchCharacter()">Buscar</button>
+    </div>
+    <div>
+        <label for="nameInput">Buscar por nome</label>
+        <input type="text" id="nameInput"> 
+        <button onclick="seachByName()">Buscar</button>
+    </div>
+    <div id="container"></div>
+    <script>
+        async function fetchCharacter(){
+            const page = document.getElementById("pageInput").value || 1;
+            const apiUrl = `https://rickandmortyapi.com/api/character/?page=${page}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                console.log(data);
+                displayCharacters(data.results);
+            } catch (error) {                
+                console.error("Erro ao buscar personagens - ",error);
+            }
+        }
+        function displayCharacters(Characters){
+            const container = document.getElementById("container");
+            container.innerHTML = "";
+
+            Characters.forEach(Character => {
+                const card = document.createElement("div");
+               card.className = "card";
+               
+               const name = document.createElement("h3");
+               name.textContent = Character.name;
+                
+               const status = document.createElement("h4");
+               status.textContent = `Status: ${Character.status}`;
+               
+               const species = document.createElement("p");
+               species.textContent = `Spiece: ${Character.species}`;
+
+               const image = document.createElement("img");
+               image.src = Character.image;
+               image.alt = Character.name;
+               image.style.width = "200px";
+            
+               card.appendChild(name);
+               card.appendChild(species);
+               card.appendChild(image);
+               card.appendChild(status);
+
+               container.appendChild(card);
+
+               console.log(status_color)
+            });
+            function seachByName(){
+                const searchTerm = document.getElementById("nameInput").value.toLowerCase();
+                const character = document.querySelectorAll(".card");
+
+                character.forEach((character) => {
+
+                    const characterName = character.querySelector("h3").textContent.toLowerCase();
+                    if(characterName.includes(searchTerm)){
+                        character.style.dispaly = "block";
+                    }
+                    else{
+                        character.style.dispaly = "none";
+                    }
+                });
+            }
+        }
+        
+    </script>
+</body>
+</html>
